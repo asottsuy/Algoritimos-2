@@ -1,0 +1,7 @@
+Tipo de Estruturas de Dados:
+
+* Estruturas de dados lineares
+são aquelas em que os elementos são organizados sequencialmente, como listas, pilhas e filas.
+
+* Estruturas de dados não lineares
+são aquelas em que os elementos não são organizados sequencialmente, como árvores e grafos.
