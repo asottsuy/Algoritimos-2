@@ -1,0 +1,13 @@
+Um hospital deseja implementar um sistema de gerenciamento de entrada de pacientes. 
+Seu chefe quer que você faça isso utilizando uma queue simplesmente encadeada.
+Cada nó da lista deve armazenar informações sobre um paciente, 
+como nome, idade e número do prontuário de entrada.
+A fila deve ser ordenada pelo número do prontuário.
+
+Escreva um programa em Python que permita ao usuário realizar as seguintes operações:
+
+-Adicionar um novo paciente à fila, informando nome, idade e número do prontuário.
+O número do prontuário deverá ser um número sequencial. 
+Exemplo: 2503240001, 2503240002, 2503240003,...
+-Listar todos os pacientes da lista pelo nome.(Busca sequencial)
+-Buscar um paciente pelo número do prontuário.(Busca binária)
