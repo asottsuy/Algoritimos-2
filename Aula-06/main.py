@@ -11,7 +11,7 @@ lista.addInicio(1)
 lista.addInicio(6)
 lista.addInicio(3)
 
-print(f"\nTamanho: {lista.tamanho}")
+print(f"\nCheguei aqui Tamanho: {lista.tamanho}")
 
 listaOrdenada = SelectionSort(lista)
 listaOrdenada.selection_sort()
