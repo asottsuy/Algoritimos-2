@@ -1,0 +1,27 @@
+Árvores:
+
+* Fila, lista, pilha, etc
+
+* Binária ou Genérica/Grau n
+
+*Genérica: 
+        Estrutura de diretórios/pastas/arquivos; 
+        Banco de Dados
+        HTML/XML
+        Mais flexivel
+        Ilimitadas ramificações
+    
+*Binárias: 
+        Estritamente Binária Perfeita:
+            * todos os nós internos tem 2 filhos
+        Degenerada
+            * Cada nó possui apenas um filho,
+            * Desempenho ineficiente
+
+  Pesquisa e ordenação!
+
+
+Formas de percorrer uma arvore:
+* Pré-ORdem (visita, esquerda, direita)
+* Em-ORdem (esquerda, visita, direita)
+* Prós-ORdem (esquerda, direita, visita)
