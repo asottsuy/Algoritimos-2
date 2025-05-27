@@ -13,7 +13,7 @@ class Bubble:
             no_atual = self.lista.inicio #define o no atual
             no_ante = None
             for j in range(self.lista.tamanho - i - 1): #pecorre pelos elementos da lista - indice -1
-                if no_atual.valor > no_atual.prox.valor:
+                if no_atual.prox is not None and no_atual.valor > no_atual.prox.valor:
                     aux = no_atual.prox
                     no_atual.prox = aux.prox
                     aux.prox = no_atual
@@ -24,7 +24,7 @@ class Bubble:
                         self.lista.inicio = aux
 
                     no_ante = aux
-                    
+
                 else:
                     no_ante = no_atual
 
@@ -33,20 +33,12 @@ class Bubble:
         return self.lista
 
 
-    
-lista = ListaEncadeada()
-lista.adicionar('D')
-lista.adicionar('A')
-lista.adicionar('F')
-lista.adicionar('E')
-lista.adicionar('B')
-lista.adicionar('C')
-
-print("antes")
-lista.imprimir()
-
-bubble = Bubble(lista)
-bubble.ordenarLista()
-
-print("depois")
-lista.imprimir()
+    def imprimir(self):
+        print("\n----------------------------------")
+        if self.inicio == None:
+            print( "\nLista Encadeada vazia!")
+        else:
+            aux = self.inicio
+            while aux:
+                print( aux.valor )
+                aux = aux.prox
