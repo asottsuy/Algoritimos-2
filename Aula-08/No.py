@@ -7,4 +7,5 @@ class No:
     def adicionar_filho(self, filho):
         self.filhos.append(filho)
     
-    
+    def __str__(self):
+        return self
