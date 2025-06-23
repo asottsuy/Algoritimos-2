@@ -48,4 +48,21 @@ class ArvoreBinaria:
             no.direita = self._excluir_rec(no.right, temp.valor)
         return no
 
+    #imprimir
+    def imprimir_em_ordem(nodo):
+        if nodo is None:
+            return
+        imprimir_em_ordem(nodo.left)
+        print(nodo.value)
+        imprimir_em_ordem(nodo.right)
+
             
+
+arvore = ArvoreBinaria()
+arvore.inserir(20)
+arvore.inserir(10)
+arvore.inserir(60)
+arvore.inserir(30)
+arvore.inserir(35)
+arvore.inserir(22)
+arvore.imprimir_em_ordem()
