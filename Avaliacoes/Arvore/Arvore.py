@@ -36,7 +36,12 @@ class Arvore:
 
     
     def _imprimir_recursivo(self, nodo_atual):
-        if nodo_atual
+        if nodo_atual is not None:
+            self._imprimir_recursivo(nodo_atual.esquerda)
+
+            print(nodo_atual.valor, end='')
+
+            self._imprimir_recursivo(nodo_atual.direita)
 
 
 
