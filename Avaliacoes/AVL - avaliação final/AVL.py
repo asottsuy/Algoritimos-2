@@ -23,7 +23,7 @@ class AVL:
 
         pai.altura = 1 + max(self._get_altura(pai.esquerda), self._get_altura(pai.direita))
 
-        filhoE = 1 + max(self._get_altura(filhoE.esquerda), self._get_altura(filhoE.direita))
+        filhoE.altura = 1 + max(self._get_altura(filhoE.esquerda), self._get_altura(filhoE.direita))
 
         return filhoE
     
@@ -35,7 +35,7 @@ class AVL:
 
         pai.altura = 1 + max(self._get_altura(pai.esquerda), self._get_altura(pai.direita))
 
-        filhoD = 1 + max(self._get_altura(filhoD.esquerda), self._get_altura(filhoD.direita))
+        filhoD.altura = 1 + max(self._get_altura(filhoD.esquerda), self._get_altura(filhoD.direita))
 
         return filhoD
 
@@ -44,13 +44,13 @@ class AVL:
             self.raiz = No(valor)
             
         else:
-            print(f"-----Inserindo Nó folha: {valor}-----")
+            print(f"-----Inserindo Nó folha: {valor}-----\n")
             self.raiz = self._inserir_no_folha(self.raiz, valor)
 
     def _inserir_no_folha(self, no_atual, valor):
         if not no_atual:
             return No(valor)
-        elif valor < no_atual:
+        elif valor < no_atual.valor:
             no_atual.esquerda = self._inserir_no_folha(no_atual.esquerda, valor)
         else:
             no_atual.direita = self._inserir_no_folha(no_atual.direita, valor)
@@ -62,15 +62,74 @@ class AVL:
 
         if fator < -1:
             if valor < no_atual.esquerda.valor: #rotação simples para a direita
-                self._rotacao_direita(no_atual)
+                return self._rotacao_direita(no_atual)
             else: #rotação dupla 1) esquerda 2)direita
                 no_atual.esquerda = self._rotacao_esquerda(no_atual.esquerda)
-                self._rotacao_direita(no_atual)   
+                return self._rotacao_direita(no_atual)   
                 
         elif fator > 1:
-            if valor < no_atual.direita.valor: #rotação simples para a esquerda
-                self._rotacao_esquerda(no_atual)
+            if valor > no_atual.direita.valor: #rotação simples para a esquerda
+                return self._rotacao_esquerda(no_atual)
             else: #rotação dupla 1)direita 2)esquerda
                 no_atual.direita = self._rotacao_direita(no_atual.direita)
-                self._rotacao_esquerda(no_atual)
+                return self._rotacao_esquerda(no_atual)
         return no_atual
+    
+
+            # Dentro da classe AVL
+    def imprimir_como_diretorio(self):
+        """Método público para iniciar a impressão em estilo de diretório."""
+        if not self.raiz:
+            print("A árvore está vazia.")
+        else:
+            self._imprimir_como_diretorio_recursivo(self.raiz, "", True)
+
+    def _imprimir_como_diretorio_recursivo(self, no_atual, prefixo, eh_ultimo):
+        if no_atual is not None:
+            # Imprime o nó atual com o prefixo correto
+            print(prefixo + ("└── " if eh_ultimo else "├── ") + f"Valor:{no_atual.valor} (A:{no_atual.altura}) (FB:{self._get_fator_balanceamento(no_atual)})")
+
+            # Prepara o prefixo para os filhos
+            prefixo_filho = prefixo + ("    " if eh_ultimo else "│   ")
+            
+            # Faz uma lista com os filhos do no atual.
+            # Ele retira todos os dados NONE
+            filhos = [no for no in [no_atual.esquerda, no_atual.direita] if no]
+            # retorna o endereço de memoria
+            
+            #Usamos uma lista para facilitar a iteração e saber quem é o último.
+            for i, filho in enumerate(filhos):#enumerate retorna o indice e o filho
+                eh_o_ultimo_da_lista = (i == len(filhos) - 1)
+                self._imprimir_como_diretorio_recursivo(filho, prefixo_filho, eh_o_ultimo_da_lista)
+
+            '''
+            exemplo:    0     1
+            filhos = [a310, e550]
+            i = 1       filho = 1 
+            eh_o_ultimo_da_lista = (1 == 2 - 1) =  True e o ultimo
+            recursão novamente
+
+            *dentro do for
+                self._imprimir_como_diretorio_recursivo(a310(100), prefixo, eh_o_ultimo_da_lista)
+                    print(├── e550, valor)
+                    prefixo(└── )
+
+                    filhos = []
+                    nem vai iterar -  volta para a o for anterior
+
+
+            '''
+
+
+arvore = AVL()
+arvore.inserir(100)
+arvore.imprimir_como_diretorio()
+arvore.inserir(90)
+arvore.imprimir_como_diretorio()
+arvore.inserir(80)
+arvore.imprimir_como_diretorio()
+arvore.inserir(110)
+arvore.imprimir_como_diretorio()
+arvore.inserir(115)
+arvore.imprimir_como_diretorio()
+
