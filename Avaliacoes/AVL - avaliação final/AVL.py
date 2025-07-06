@@ -120,6 +120,68 @@ class AVL:
 
             '''
 
+    def excluir (self, valor):
+        if self.raiz is None:
+            print('Árvore está vazia!')
+        else:
+            self.raiz = self._excluir_recursivo(self.raiz, valor)
+
+    # Esta função auxiliar vai encontrar o menor nó em uma subárvore
+    def _get_no_com_menor_valor(self, no_atual):
+        if no_atual is None or no_atual.esquerda is None:
+            return no_atual
+        return self._get_no_com_menor_valor(no_atual.esquerda)
+
+    def _excluir_recursivo(self, no_atual, valor):
+        if not no_atual:
+            print(f'Valor: {valor} não encontrado!')
+            return no_atual
+        elif valor < no_atual.valor: #vai descer pela esquerda
+            no_atual.esquerda = self._excluir_recursivo(no_atual.esquerda, valor)
+        elif valor > no_atual.valor:
+            no_atual.direita = self._excluir_recursivo(no_atual.direita, valor)
+
+        #se no_atual não atender nenhuma das verificações acima significa q o valor foi encontrado
+        else:
+            #vamos verificar se o no encontrado tem filhos, pois se tiver precisamos guardar eles para depois fazer as rotações/balanceamento
+            if no_atual.esquerda is None:
+                temp = no_atual.direita
+                no_atual = None
+                return temp
+            elif no_atual.direita is None:
+                temp = no_atual.esquerda
+                no_atual = None
+                return temp
+            # Encontre o sucessor em ordem (o menor nó na subárvore direita)
+            sucessor = self._get_no_com_menor_valor(no_atual.direita)
+            no_atual.valor = sucessor.valor
+            no_atual.direita = self._excluir_recursivo(no_atual.direita, sucessor.valor)
+            
+        if no_atual is None:
+            return no_atual
+
+        # Fase 2: Rebalanceamento AVL
+        no_atual.altura = 1 + max(self._get_altura(no_atual.esquerda),
+                                  self._get_altura(no_atual.direita))
+        fator = self._get_fator_balanceamento(no_atual)
+
+        # Rotações, se necessário
+        if fator < -1 and self._get_fator_balanceamento(no_atual.esquerda) <= 0: # Esq-Esq
+            return self._rotacao_direita(no_atual)
+
+        if fator < -1 and self._get_fator_balanceamento(no_atual.esquerda) > 0: # Esq-Dir
+            no_atual.esquerda = self._rotacao_esquerda(no_atual.esquerda)
+            return self._rotacao_direita(no_atual)
+
+        if fator > 1 and self._get_fator_balanceamento(no_atual.direita) >= 0: # Dir-Dir
+            return self._rotacao_esquerda(no_atual)
+
+        if fator > 1 and self._get_fator_balanceamento(no_atual.direita) < 0: # Dir-Esq
+            no_atual.direita = self._rotacao_direita(no_atual.direita)
+            return self._rotacao_esquerda(no_atual)
+            
+        return no_atual
+
 
 arvore = AVL()
 arvore.inserir(100)
@@ -133,3 +195,5 @@ arvore.imprimir_como_diretorio()
 arvore.inserir(115)
 arvore.imprimir_como_diretorio()
 
+arvore.excluir(110)
+arvore.imprimir_como_diretorio()
