@@ -44,7 +44,7 @@ class AVL:
             self.raiz = No(valor)
             
         else:
-            print(f"-----Inserindo Nó folha: {valor}-----\n")
+            print(f"\n-----Inserindo Nó folha: {valor}-----\n")
             self.raiz = self._inserir_no_folha(self.raiz, valor)
 
     def _inserir_no_folha(self, no_atual, valor):
@@ -124,6 +124,7 @@ class AVL:
         if self.raiz is None:
             print('Árvore está vazia!')
         else:
+            print(f"\n-----Excluindo Nó: {valor}-----\n")
             self.raiz = self._excluir_recursivo(self.raiz, valor)
 
     # Esta função auxiliar vai encontrar o menor nó em uma subárvore
@@ -197,3 +198,4 @@ arvore.imprimir_como_diretorio()
 
 arvore.excluir(110)
 arvore.imprimir_como_diretorio()
+
