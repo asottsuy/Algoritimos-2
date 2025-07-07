@@ -28,6 +28,7 @@ class AVL:
         return filhoE
     
     def _rotacao_esquerda(self, pai): #fator > 1
+        #2var auxuiliares para guardar a referncia dos filhos de pai e filho
         filhoD = pai.direita
         neto = filhoD.esquerda
         filhoD.esquerda = pai
@@ -39,8 +40,8 @@ class AVL:
 
         return filhoD
 
-    def inserir(self, valor):
-        if self.raiz is None:
+    def inserir(self, valor): #função que vai ser chamada
+        if self.raiz is None: #serve para
             self.raiz = No(valor)
             
         else:
@@ -48,26 +49,31 @@ class AVL:
             self.raiz = self._inserir_no_folha(self.raiz, valor)
 
     def _inserir_no_folha(self, no_atual, valor):
-        if not no_atual:
+
+        '''Parte 1 (ver se é maior ou menor)'''
+        if not no_atual:#se o 
+            #vai de fato inserir o valor
             return No(valor)
-        elif valor < no_atual.valor:
+        elif valor < no_atual.valor:#verificar se o valor deve ir para a esquerda ou para a direita
             no_atual.esquerda = self._inserir_no_folha(no_atual.esquerda, valor)
         else:
             no_atual.direita = self._inserir_no_folha(no_atual.direita, valor)
 
-        #calcular a altura
+        '''Parte 2 (calcular a altura / balancear)'''
+
         no_atual.altura = 1 + max(self._get_altura(no_atual.esquerda), self._get_altura(no_atual.direita))
 
         fator = self._get_fator_balanceamento(no_atual)
 
-        if fator < -1:
+        '''Parte 3'''
+        if fator < -1: #arvore desbalanceada para a esquerda
             if valor < no_atual.esquerda.valor: #rotação simples para a direita
                 return self._rotacao_direita(no_atual)
             else: #rotação dupla 1) esquerda 2)direita
                 no_atual.esquerda = self._rotacao_esquerda(no_atual.esquerda)
                 return self._rotacao_direita(no_atual)   
                 
-        elif fator > 1:
+        elif fator > 1: #arvore desbalanceada para a direita
             if valor > no_atual.direita.valor: #rotação simples para a esquerda
                 return self._rotacao_esquerda(no_atual)
             else: #rotação dupla 1)direita 2)esquerda
@@ -82,7 +88,7 @@ class AVL:
         if not self.raiz:
             print("A árvore está vazia.")
         else:
-            self._imprimir_como_diretorio_recursivo(self.raiz, "", True)
+            self._imprimir_como_diretorio_recursivo(self.raiz, "" , True)
 
     def _imprimir_como_diretorio_recursivo(self, no_atual, prefixo, eh_ultimo):
         if no_atual is not None:
@@ -120,6 +126,7 @@ class AVL:
 
             '''
 
+    #basicamente ela desce procurando, e quando encontra, sobe organizando e ligando os pontos
     def excluir (self, valor):
         if self.raiz is None:
             print('Árvore está vazia!')
@@ -127,13 +134,15 @@ class AVL:
             print(f"\n-----Excluindo Nó: {valor}-----\n")
             self.raiz = self._excluir_recursivo(self.raiz, valor)
 
-    # Esta função auxiliar vai encontrar o menor nó em uma subárvore
+    # Esta função auxiliar vai encontrar o menor nó em uma subárvore para achar o sucessor do nó retirado
     def _get_no_com_menor_valor(self, no_atual):
         if no_atual is None or no_atual.esquerda is None:
             return no_atual
         return self._get_no_com_menor_valor(no_atual.esquerda)
 
     def _excluir_recursivo(self, no_atual, valor):
+        '''Parte 1
+            Descobrir se o valor existe ou não'''
         if not no_atual:
             print(f'Valor: {valor} não encontrado!')
             return no_atual
@@ -143,41 +152,50 @@ class AVL:
             no_atual.direita = self._excluir_recursivo(no_atual.direita, valor)
 
         #se no_atual não atender nenhuma das verificações acima significa q o valor foi encontrado
+        #Parte 2
+        #Encontrou o valor na árvore e precisa encontrar o sucessor dele
         else:
             #vamos verificar se o no encontrado tem filhos, pois se tiver precisamos guardar eles para depois fazer as rotações/balanceamento
-            if no_atual.esquerda is None:
-                temp = no_atual.direita
-                no_atual = None
-                return temp
+            if no_atual.esquerda is None: #se tiver apenas 1 filho á dir eita
+                temp = no_atual.direita  #guarda o filho do nó que vai ser apagado
+                no_atual = None #apaga o nó
+                return temp #retorna para cima o filho do nó apagado
             elif no_atual.direita is None:
                 temp = no_atual.esquerda
                 no_atual = None
                 return temp
-            # Encontre o sucessor em ordem (o menor nó na subárvore direita)
-            sucessor = self._get_no_com_menor_valor(no_atual.direita)
-            no_atual.valor = sucessor.valor
-            no_atual.direita = self._excluir_recursivo(no_atual.direita, sucessor.valor)
             
-        if no_atual is None:
-            return no_atual
+            #caso tenha os 2 filhos
+            # Encontre o sucessor em ordem (o menor nó na subárvore direita)
+            sucessor = self._get_no_com_menor_valor(no_atual.direita) #guarda o menor valor da direita
+            no_atual.valor = sucessor.valor #atribui ao no_atual.valor
+            no_atual.direita = self._excluir_recursivo(no_atual.direita, sucessor.valor)#agora ele desce para a direita novamente para organizar e exlcuir o sucessor (já que ele subiu)
+            
+        #parte 3
+        #Subida, rebalanceamento
 
-        # Fase 2: Rebalanceamento AVL
+        # 
+        #Rebalanceamento AVL
         no_atual.altura = 1 + max(self._get_altura(no_atual.esquerda),
-                                  self._get_altura(no_atual.direita))
-        fator = self._get_fator_balanceamento(no_atual)
+                                  self._get_altura(no_atual.direita)) #define altura nova do no_atual
+        fator = self._get_fator_balanceamento(no_atual)#define o fator
 
         # Rotações, se necessário
         if fator < -1 and self._get_fator_balanceamento(no_atual.esquerda) <= 0: # Esq-Esq
+            #rotação simples para a direita
             return self._rotacao_direita(no_atual)
 
         if fator < -1 and self._get_fator_balanceamento(no_atual.esquerda) > 0: # Esq-Dir
+            #rotaçao dupla para esquerda -> direita
             no_atual.esquerda = self._rotacao_esquerda(no_atual.esquerda)
             return self._rotacao_direita(no_atual)
 
         if fator > 1 and self._get_fator_balanceamento(no_atual.direita) >= 0: # Dir-Dir
+            #rotaçao simples para direita
             return self._rotacao_esquerda(no_atual)
 
         if fator > 1 and self._get_fator_balanceamento(no_atual.direita) < 0: # Dir-Esq
+            #rotaçao dupla para direta -> esquerda
             no_atual.direita = self._rotacao_direita(no_atual.direita)
             return self._rotacao_esquerda(no_atual)
             
@@ -187,15 +205,15 @@ class AVL:
 arvore = AVL()
 arvore.inserir(100)
 arvore.imprimir_como_diretorio()
-arvore.inserir(90)
-arvore.imprimir_como_diretorio()
-arvore.inserir(80)
-arvore.imprimir_como_diretorio()
-arvore.inserir(110)
-arvore.imprimir_como_diretorio()
-arvore.inserir(115)
+
+arvore.inserir(50)
 arvore.imprimir_como_diretorio()
 
-arvore.excluir(110)
+arvore.inserir(20)
 arvore.imprimir_como_diretorio()
+
+arvore.excluir(50)
+arvore.imprimir_como_diretorio()
+
+
 
